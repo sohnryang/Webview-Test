@@ -22,6 +22,13 @@ class ViewController: UIViewController, WKUIDelegate {
     }
 
     override func viewDidLoad() {
+        HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
+        WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) {records in
+            records.forEach { record in
+                WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
+            }
+        }
+        
         super.viewDidLoad()
         let startURL = URL(string: "https://www.google.com")
         let req = URLRequest(url: startURL!)
